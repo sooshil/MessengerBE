@@ -5,3 +5,4 @@ pluginManagement {
 	}
 }
 rootProject.name = "chirpbe"
+include("app")
