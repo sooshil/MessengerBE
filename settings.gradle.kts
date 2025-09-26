@@ -6,7 +6,11 @@ pluginManagement {
 		gradlePluginPortal()
 	}
 }
+
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
 rootProject.name = "chirpbe"
+
 include("app")
 include("user")
 include("chat")

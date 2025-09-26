@@ -1,6 +1,5 @@
 plugins {
 	id("chirpbe.kotlin-common") // this is another file we created in this package
-	id("org.springframework.boot")
 	id("io.spring.dependency-management")
 }
 

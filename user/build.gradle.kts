@@ -14,7 +14,9 @@ repositories {
 }
 
 dependencies {
-    testImplementation(kotlin("test"))
+	implementation(projects.common)
+	
+	testImplementation(kotlin("test"))
 }
 
 tasks.test {

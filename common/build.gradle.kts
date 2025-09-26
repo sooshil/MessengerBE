@@ -1,7 +1,6 @@
 plugins {
 	id("java-library")
 	id("chirpbe.kotlin-common")
-	id("org.springframework.boot")
 }
 
 group = "org.sukajee"
