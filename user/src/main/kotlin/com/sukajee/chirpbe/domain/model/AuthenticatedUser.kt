@@ -1,4 +1,4 @@
-package com.sukajee.user.domain.model
+package com.sukajee.chirpbe.domain.model
 
 data class AuthenticatedUser(
 	val user: User,
