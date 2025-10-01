@@ -1,5 +1,6 @@
 package com.sukajee.chirpbe.api.exception_handling
 
+import com.sukajee.chirpbe.domain.exception.InvalidTokenException
 import com.sukajee.chirpbe.domain.exception.PasswordEncodeException
 import com.sukajee.chirpbe.domain.exception.UserAlreadyExistsException
 import org.springframework.http.HttpStatus
@@ -41,6 +42,13 @@ class AuthExceptionHandler {
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	fun onPasswordEncodeException(e: PasswordEncodeException) = mapOf(
 		"code" to "INTERNAL_SERVER_ERROR",
+		"message" to e.message
+	)
+	
+	@ExceptionHandler(InvalidTokenException::class)
+	@ResponseStatus(HttpStatus.UNAUTHORIZED)
+	fun onInvalidToken(e: InvalidTokenException) = mapOf(
+		"code" to "INVALID_TOKEN",
 		"message" to e.message
 	)
 }
