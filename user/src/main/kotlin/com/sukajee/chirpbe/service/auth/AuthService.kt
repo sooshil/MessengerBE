@@ -1,6 +1,7 @@
 package com.sukajee.chirpbe.service.auth
 
 import com.sukajee.chirpbe.domain.exception.InvalidCredentialsException
+import com.sukajee.chirpbe.domain.exception.InvalidTokenException
 import com.sukajee.chirpbe.domain.exception.PasswordEncodeException
 import com.sukajee.chirpbe.domain.exception.UserAlreadyExistsException
 import com.sukajee.chirpbe.domain.exception.UserNotFoundException
@@ -13,7 +14,9 @@ import com.sukajee.chirpbe.infra.database.mappers.toUser
 import com.sukajee.chirpbe.infra.database.repositories.RefreshTokenRepository
 import com.sukajee.chirpbe.infra.database.repositories.UserRepository
 import com.sukajee.chirpbe.infra.security.PasswordEncoder
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.security.MessageDigest
 import java.time.Instant
 import java.util.Base64
@@ -66,6 +69,43 @@ class AuthService(
 				accessToken = accessToken,
 				refreshToken = refreshToken
 			)
+		} ?: throw UserNotFoundException()
+	}
+	
+	@Transactional
+	fun refresh(refreshToken: String): AuthenticatedUser {
+		if (jwtService.validateRefreshToken(refreshToken)) {
+			throw InvalidTokenException(
+				message = "Invalid refresh token"
+			)
+		}
+		val userId = jwtService.getUserIdFromToken(refreshToken)
+		val user = userRepository.findByIdOrNull(userId) ?: throw UserNotFoundException()
+		
+		val hashed = hashToken(refreshToken)
+		
+		return user.id?.let { userId ->
+			refreshTokenRepository.findByUserIdAndHashedToken(
+				userId = userId,
+				hashedToken = hashed
+			) ?: InvalidTokenException("Invalid refresh token")
+			
+			refreshTokenRepository.deleteByUserIdAndHashedToken(
+				userId = userId,
+				hashedToken = hashed
+			)
+			
+			val newRefreshToken = jwtService.generateRefreshToken(userId)
+			val newAccessToken = jwtService.generateAccessToken(userId)
+			
+			storeRefreshToken(userId, newRefreshToken)
+			
+			AuthenticatedUser(
+				user = user.toUser(),
+				accessToken = newAccessToken,
+				refreshToken = newRefreshToken
+			)
+			
 		} ?: throw UserNotFoundException()
 	}
 	
