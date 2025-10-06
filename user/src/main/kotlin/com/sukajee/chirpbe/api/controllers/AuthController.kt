@@ -2,6 +2,7 @@ package com.sukajee.chirpbe.api.controllers
 
 import com.sukajee.chirpbe.api.dto.AuthenticatedUserDto
 import com.sukajee.chirpbe.api.dto.LoginRequest
+import com.sukajee.chirpbe.api.dto.RefreshRequest
 import com.sukajee.chirpbe.api.dto.RegisterRequest
 import com.sukajee.chirpbe.api.dto.UserDto
 import com.sukajee.chirpbe.api.mappers.toAuthenticatedUserDto
@@ -36,5 +37,14 @@ class AuthController(private val authService: AuthService) {
 			email = body.email,
 			password = body.password
 		).toAuthenticatedUserDto()
+	}
+	
+	@PostMapping("/refresh")
+	fun refresh(
+		@RequestBody body: RefreshRequest
+	): AuthenticatedUserDto {
+		return authService
+			.refresh(refreshToken = body.refreshToken)
+			.toAuthenticatedUserDto()
 	}
 }

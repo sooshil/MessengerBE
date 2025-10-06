@@ -134,7 +134,7 @@ class AuthService(
 	@Transactional
 	fun refresh(refreshToken: String): AuthenticatedUser {
 		// Perform an initial validation on the JWT to check for expiration or malformation.
-		if (jwtService.validateRefreshToken(refreshToken)) {
+		if (!jwtService.validateRefreshToken(refreshToken)) {
 			throw InvalidTokenException(
 				message = "Invalid refresh token"
 			)
@@ -151,7 +151,7 @@ class AuthService(
 			refreshTokenRepository.findByUserIdAndHashedToken(
 				userId = userId,
 				hashedToken = hashed
-			) ?: InvalidTokenException("Invalid refresh token")
+			) ?: throw InvalidTokenException("Invalid refresh token")
 
 			// The token is valid, so delete the old one to prevent reuse.
 			refreshTokenRepository.deleteByUserIdAndHashedToken(
