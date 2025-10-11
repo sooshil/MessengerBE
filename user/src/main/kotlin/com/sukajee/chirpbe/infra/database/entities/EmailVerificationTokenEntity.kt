@@ -1,5 +1,6 @@
 package com.sukajee.chirpbe.infra.database.entities
 
+import com.sukajee.chirpbe.infra.security.TokenGenerator
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
@@ -23,7 +24,7 @@ class EmailVerificationTokenEntity(
 	var id: Long = 0,
 	
 	@Column(nullable = false, unique = true)
-	var token: String,
+	var token: String = TokenGenerator.generateSecureToken(),
 	
 	@Column(nullable = false)
 	var expiresAt: Instant,
@@ -32,9 +33,15 @@ class EmailVerificationTokenEntity(
 	var createdAt: Instant = Instant.now(),
 	
 	@Column(nullable = false)
-	var usedAt: Instant?,
+	var usedAt: Instant? = null,
 	
 	@JoinColumn(name = "user_id", nullable = false)
 	@ManyToOne(fetch = FetchType.LAZY)
 	var user: UserEntity
-)
+) {
+	val isExpired: Boolean
+		get() = expiresAt.isBefore(Instant.now())
+	
+	val isUsed: Boolean
+		get() = usedAt != null
+}
