@@ -1,5 +1,6 @@
 package com.sukajee.chirpbe.service.auth
 
+import com.sukajee.chirpbe.domain.exception.EmailNotVerifiedException
 import com.sukajee.chirpbe.domain.exception.InvalidCredentialsException
 import com.sukajee.chirpbe.domain.exception.InvalidTokenException
 import com.sukajee.chirpbe.domain.exception.PasswordEncodeException
@@ -36,7 +37,8 @@ class AuthService(
 	private val userRepository: UserRepository,
 	private val refreshTokenRepository: RefreshTokenRepository,
 	private val passwordEncoder: PasswordEncoder,
-	private val jwtService: JwtService
+	private val jwtService: JwtService,
+	private val emailVerificationService: EmailVerificationService
 ) {
 	/**
 	 * Registers a new user in the system.
@@ -52,6 +54,7 @@ class AuthService(
 	 * @throws UserAlreadyExistsException if a user with the same username or email already exists.
 	 * @throws PasswordEncodeException if the password hashing fails.
 	 */
+	@Transactional
 	fun register(username: String, email: String, password: String): User {
 		// Check if a user with the provided email or username already exists to prevent duplicates.
 		val user = userRepository.findByEmailOrUsername(
@@ -64,13 +67,16 @@ class AuthService(
 		val hashedPassword = passwordEncoder.encode(password) ?: throw PasswordEncodeException()
 
 		// Create and save the new user entity to the database.
-		val savedUser = userRepository.save(
+		val savedUser = userRepository.saveAndFlush(
 			UserEntity(
 				username = username.trim(),
 				email = email.trim(),
 				hashedPassword = hashedPassword,
 			)
 		)
+		
+		emailVerificationService.createEmailVerificationToken(email.trim())
+		
 		// Convert the saved entity to a domain model and return it.
 		return savedUser.toUser()
 	}
@@ -100,7 +106,9 @@ class AuthService(
 			throw InvalidCredentialsException()
 		}
 
-		// TODO: check for verified email
+		if (!user.hasEmailVerified) {
+			throw EmailNotVerifiedException()
+		}
 
 		// If authentication is successful, generate tokens.
 		return user.id?.let {

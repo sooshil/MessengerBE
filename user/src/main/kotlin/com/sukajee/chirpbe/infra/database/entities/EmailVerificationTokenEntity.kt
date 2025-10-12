@@ -32,7 +32,7 @@ class EmailVerificationTokenEntity(
 	@CreationTimestamp
 	var createdAt: Instant = Instant.now(),
 	
-	@Column(nullable = false)
+	@Column
 	var usedAt: Instant? = null,
 	
 	@JoinColumn(name = "user_id", nullable = false)

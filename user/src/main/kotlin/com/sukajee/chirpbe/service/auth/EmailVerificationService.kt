@@ -21,7 +21,7 @@ class EmailVerificationService(
 	private val emailVerificationTokenRepository: EmailVerificationTokenRepository,
 	private val userRepository: UserRepository,
 	
-	@param:Value($$"${chirp.email.verification.expiry-hours}")
+	@param:Value($$"${chirpbe.email.verification.expiry-hours}")
 	private val expiryHours: Long
 ) {
 	@Transactional

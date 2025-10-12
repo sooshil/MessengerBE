@@ -36,7 +36,7 @@ jwt:
   secret: ${JWT_SECRET_BASE64}
 #    expiration-minutes: 15
 
-chirp:
+chirpbe:
   email:
     verification:
       expiry-hours: 1

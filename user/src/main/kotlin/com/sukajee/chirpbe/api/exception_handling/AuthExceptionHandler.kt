@@ -1,5 +1,6 @@
 package com.sukajee.chirpbe.api.exception_handling
 
+import com.sukajee.chirpbe.domain.exception.EmailNotVerifiedException
 import com.sukajee.chirpbe.domain.exception.InvalidCredentialsException
 import com.sukajee.chirpbe.domain.exception.InvalidTokenException
 import com.sukajee.chirpbe.domain.exception.PasswordEncodeException
@@ -65,6 +66,13 @@ class AuthExceptionHandler {
 	@ResponseStatus(HttpStatus.UNAUTHORIZED)
 	fun onInvalidCredentials(e: InvalidCredentialsException) = mapOf(
 		"code" to "INVALID_CREDENTIALS",
+		"message" to e.message
+	)
+	
+	@ExceptionHandler(EmailNotVerifiedException::class)
+	@ResponseStatus(HttpStatus.UNAUTHORIZED)
+	fun onEmailNotVerified(e: EmailNotVerifiedException) = mapOf(
+		"code" to "EMAIL_NOT_VERIFIED",
 		"message" to e.message
 	)
 }
