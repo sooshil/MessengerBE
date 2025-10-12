@@ -16,13 +16,13 @@ import java.time.Instant
 
 @Entity
 @Table(
-	name = "email_verification_tokens",
+	name = "password_reset_tokens",
 	schema = "user_service",
 	indexes = [
-		Index(name = "idx_email_verification_tokens_token", columnList = "token")
+		Index(name = "idx_password_reset_tokens_token", columnList = "token")
 	]
 )
-class EmailVerificationTokenEntity(
+class PasswordResetTokenEntity(
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	var id: Long = 0,
@@ -36,7 +36,7 @@ class EmailVerificationTokenEntity(
 	@CreationTimestamp
 	var createdAt: Instant = Instant.now(),
 	
-	@Column
+	@Column(nullable = true)
 	var usedAt: Instant? = null,
 	
 	@JoinColumn(name = "user_id", nullable = false)
