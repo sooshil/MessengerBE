@@ -40,3 +40,5 @@ chirpbe:
   email:
     verification:
       expiry-hours: 1
+    password-reset:
+      expiry-minutes: 15

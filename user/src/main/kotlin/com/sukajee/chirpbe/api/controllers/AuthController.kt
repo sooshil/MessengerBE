@@ -7,8 +7,8 @@ import com.sukajee.chirpbe.api.dto.RegisterRequest
 import com.sukajee.chirpbe.api.dto.UserDto
 import com.sukajee.chirpbe.api.mappers.toAuthenticatedUserDto
 import com.sukajee.chirpbe.api.mappers.toUserDto
-import com.sukajee.chirpbe.service.auth.AuthService
-import com.sukajee.chirpbe.service.auth.EmailVerificationService
+import com.sukajee.chirpbe.service.AuthService
+import com.sukajee.chirpbe.service.EmailVerificationService
 import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping

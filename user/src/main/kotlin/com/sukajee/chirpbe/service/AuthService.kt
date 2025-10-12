@@ -1,4 +1,4 @@
-package com.sukajee.chirpbe.service.auth
+package com.sukajee.chirpbe.service
 
 import com.sukajee.chirpbe.domain.exception.EmailNotVerifiedException
 import com.sukajee.chirpbe.domain.exception.InvalidCredentialsException

@@ -1,9 +1,11 @@
 package com.sukajee.chirpbe.api.exception_handling
 
 import com.sukajee.chirpbe.domain.exception.EmailNotVerifiedException
+import com.sukajee.chirpbe.domain.exception.IncorrectOldPasswordException
 import com.sukajee.chirpbe.domain.exception.InvalidCredentialsException
 import com.sukajee.chirpbe.domain.exception.InvalidTokenException
 import com.sukajee.chirpbe.domain.exception.PasswordEncodeException
+import com.sukajee.chirpbe.domain.exception.SamePasswordException
 import com.sukajee.chirpbe.domain.exception.UserAlreadyExistsException
 import com.sukajee.chirpbe.domain.exception.UserNotFoundException
 import org.springframework.http.HttpStatus
@@ -73,6 +75,20 @@ class AuthExceptionHandler {
 	@ResponseStatus(HttpStatus.UNAUTHORIZED)
 	fun onEmailNotVerified(e: EmailNotVerifiedException) = mapOf(
 		"code" to "EMAIL_NOT_VERIFIED",
+		"message" to e.message
+	)
+	
+	@ExceptionHandler(SamePasswordException::class)
+	@ResponseStatus(HttpStatus.UNAUTHORIZED)
+	fun onSamePassword(e: SamePasswordException) = mapOf(
+		"code" to "SAME_NEW_PASSWORD",
+		"message" to e.message
+	)
+	
+	@ExceptionHandler(IncorrectOldPasswordException::class)
+	@ResponseStatus(HttpStatus.UNAUTHORIZED)
+	fun onIncorrectOldPassword(e: IncorrectOldPasswordException) = mapOf(
+		"code" to "INCORRECT_OLD_PASSWORD",
 		"message" to e.message
 	)
 }

@@ -1,4 +1,4 @@
-package com.sukajee.chirpbe.service.auth
+package com.sukajee.chirpbe.service
 
 import com.sukajee.chirpbe.domain.exception.InvalidTokenException
 import com.sukajee.chirpbe.domain.exception.UserNotFoundException
@@ -56,11 +56,11 @@ class EmailVerificationService(
 			?: throw InvalidTokenException("Email verification token is invalid.")
 		
 		if(verificationToken.isUsed) {
-			throw InvalidTokenException("Email verification token is already used.")
+			throw InvalidTokenException("Email verification token has already been used.")
 		}
 		
 		if(verificationToken.isExpired) {
-			throw InvalidTokenException("Email verification token has already expired.")
+			throw InvalidTokenException("Email verification token has already been expired.")
 		}
 		
 		emailVerificationTokenRepository.save(
