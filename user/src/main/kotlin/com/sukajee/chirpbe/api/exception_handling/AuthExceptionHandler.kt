@@ -79,7 +79,7 @@ class AuthExceptionHandler {
 	)
 	
 	@ExceptionHandler(SamePasswordException::class)
-	@ResponseStatus(HttpStatus.UNAUTHORIZED)
+	@ResponseStatus(HttpStatus.CONFLICT)
 	fun onSamePassword(e: SamePasswordException) = mapOf(
 		"code" to "SAME_NEW_PASSWORD",
 		"message" to e.message

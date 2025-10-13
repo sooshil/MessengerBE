@@ -3,19 +3,16 @@ package com.sukajee.chirpbe.api.dto
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sukajee.chirpbe.api.util.Password
 import jakarta.validation.constraints.Email
+import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
 import org.hibernate.validator.constraints.Length
 
-data class RegisterRequest(
-	@field:Length(min = 3, max = 20, message = "Username length must be between 3 and 20 characters.")
-	@JsonProperty("username")
-	val username: String,
-	
-	@field:Email(message = "Must be a valid email address.")
-	@JsonProperty("email")
-	val email: String,
+data class ChangePasswordRequest(
+	@field:NotBlank
+	@JsonProperty("oldPassword")
+	val oldPassword: String,
 	
 	@field:Password //Our own annotation to validate password.
-	@JsonProperty("password")
-	val password: String
+	@JsonProperty("newPassword")
+	val newPassword: String
 )

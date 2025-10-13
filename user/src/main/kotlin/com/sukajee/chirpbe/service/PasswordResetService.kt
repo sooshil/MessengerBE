@@ -27,7 +27,7 @@ class PasswordResetService(
 	private val passwordEncoder: PasswordEncoder,
 	private val refreshTokenRepository: RefreshTokenRepository,
 	
-	@param:Value($$"${chirpbe.password-reset.expiry-minutes}")
+	@param:Value($$"${chirpbe.email.password-reset.expiry-minutes}")
 	private val expiryMinutes: Long
 ) {
 	@Transactional

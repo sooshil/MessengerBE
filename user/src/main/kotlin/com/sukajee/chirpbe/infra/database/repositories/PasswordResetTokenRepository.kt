@@ -21,5 +21,5 @@ interface PasswordResetTokenRepository: JpaRepository<PasswordResetTokenEntity, 
 			WHERE p.user = :user AND p.usedAt IS NULL
 		"""
 	)
-	fun invalidateActiveTokensForUser(user: UserEntity): List<PasswordResetTokenEntity>
+	fun invalidateActiveTokensForUser(user: UserEntity)
 }
