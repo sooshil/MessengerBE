@@ -10,6 +10,7 @@ import com.sukajee.chirpbe.api.dto.ResetPasswordRequest
 import com.sukajee.chirpbe.api.dto.UserDto
 import com.sukajee.chirpbe.api.mappers.toAuthenticatedUserDto
 import com.sukajee.chirpbe.api.mappers.toUserDto
+import com.sukajee.chirpbe.infra.rate_limiting.EmailRateLimiter
 import com.sukajee.chirpbe.service.AuthService
 import com.sukajee.chirpbe.service.EmailVerificationService
 import com.sukajee.chirpbe.service.PasswordResetService
@@ -26,7 +27,8 @@ import org.springframework.web.bind.annotation.RestController
 class AuthController(
 	private val authService: AuthService,
 	private val emailVerificationService: EmailVerificationService,
-	private val passwordResetService: PasswordResetService
+	private val passwordResetService: PasswordResetService,
+	private val emailRateLimiter: EmailRateLimiter
 ) {
 	
 	@PostMapping("/register")
@@ -62,6 +64,17 @@ class AuthController(
 	@PostMapping("/logout")
 	fun logout(@RequestBody body: RefreshRequest) {
 		authService.logout(refreshToken = body.refreshToken)
+	}
+	
+	@PostMapping("/resend-verification-email")
+	fun resendVerificationEmail(
+		@Valid @RequestBody body: ForgotPasswordRequest
+	) {
+		emailRateLimiter.withRateLimit(
+			email = body.email
+		) {
+			emailVerificationService.resendVerificationEmail(body.email)
+		}
 	}
 	
 	@GetMapping("/verify-email")

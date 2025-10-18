@@ -5,6 +5,7 @@ import com.sukajee.chirpbe.domain.exception.IncorrectOldPasswordException
 import com.sukajee.chirpbe.domain.exception.InvalidCredentialsException
 import com.sukajee.chirpbe.domain.exception.InvalidTokenException
 import com.sukajee.chirpbe.domain.exception.PasswordEncodeException
+import com.sukajee.chirpbe.domain.exception.RateLimitException
 import com.sukajee.chirpbe.domain.exception.SamePasswordException
 import com.sukajee.chirpbe.domain.exception.UserAlreadyExistsException
 import com.sukajee.chirpbe.domain.exception.UserNotFoundException
@@ -89,6 +90,13 @@ class AuthExceptionHandler {
 	@ResponseStatus(HttpStatus.UNAUTHORIZED)
 	fun onIncorrectOldPassword(e: IncorrectOldPasswordException) = mapOf(
 		"code" to "INCORRECT_OLD_PASSWORD",
+		"message" to e.message
+	)
+	
+	@ExceptionHandler(RateLimitException::class)
+	@ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
+	fun onRateLimitException(e: RateLimitException) = mapOf(
+		"code" to "RATE_LIMIT_EXCEEDED",
 		"message" to e.message
 	)
 }
