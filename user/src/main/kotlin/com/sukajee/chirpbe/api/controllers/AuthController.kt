@@ -11,6 +11,7 @@ import com.sukajee.chirpbe.api.dto.ResetPasswordRequest
 import com.sukajee.chirpbe.api.dto.UserDto
 import com.sukajee.chirpbe.api.mappers.toAuthenticatedUserDto
 import com.sukajee.chirpbe.api.mappers.toUserDto
+import com.sukajee.chirpbe.api.util.requestUserId
 import com.sukajee.chirpbe.infra.rate_limiting.EmailRateLimiter
 import com.sukajee.chirpbe.service.AuthService
 import com.sukajee.chirpbe.service.EmailVerificationService
@@ -116,6 +117,10 @@ class AuthController(
 		@Valid
 		@RequestBody body: ChangePasswordRequest
 	) {
-		// TODO: extract request user id and call service.
+		passwordResetService.changePassword(
+			userId = requestUserId,
+			oldPassword = body.oldPassword,
+			newPassword = body.newPassword
+		)
 	}
 }

@@ -7,6 +7,7 @@ import com.sukajee.chirpbe.domain.exception.InvalidTokenException
 import com.sukajee.chirpbe.domain.exception.PasswordEncodeException
 import com.sukajee.chirpbe.domain.exception.RateLimitException
 import com.sukajee.chirpbe.domain.exception.SamePasswordException
+import com.sukajee.chirpbe.domain.exception.UnauthorizedException
 import com.sukajee.chirpbe.domain.exception.UserAlreadyExistsException
 import com.sukajee.chirpbe.domain.exception.UserNotFoundException
 import org.springframework.http.HttpStatus
@@ -97,6 +98,13 @@ class AuthExceptionHandler {
 	@ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
 	fun onRateLimitException(e: RateLimitException) = mapOf(
 		"code" to "RATE_LIMIT_EXCEEDED",
+		"message" to e.message
+	)
+	
+	@ExceptionHandler(UnauthorizedException::class)
+	@ResponseStatus(HttpStatus.UNAUTHORIZED)
+	fun onUnauthorizedException(e: UnauthorizedException) = mapOf(
+		"code" to "UNAUTHORIZED",
 		"message" to e.message
 	)
 }
