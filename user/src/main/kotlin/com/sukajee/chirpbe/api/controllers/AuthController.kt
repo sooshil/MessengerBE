@@ -1,5 +1,6 @@
 package com.sukajee.chirpbe.api.controllers
 
+import com.sukajee.chirpbe.api.config.IpRateLimit
 import com.sukajee.chirpbe.api.dto.AuthenticatedUserDto
 import com.sukajee.chirpbe.api.dto.ChangePasswordRequest
 import com.sukajee.chirpbe.api.dto.ForgotPasswordRequest
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import java.util.concurrent.TimeUnit
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -32,6 +34,7 @@ class AuthController(
 ) {
 	
 	@PostMapping("/register")
+	@IpRateLimit(requests = 10, duration = 1L, unit = TimeUnit.HOURS)
 	fun register(
 		@Valid @RequestBody body: RegisterRequest
 	): UserDto {
@@ -43,6 +46,7 @@ class AuthController(
 	}
 	
 	@PostMapping("/login")
+	@IpRateLimit(requests = 10, duration = 1L, unit = TimeUnit.HOURS)
 	fun login(
 		@Valid @RequestBody body: LoginRequest
 	): AuthenticatedUserDto {
@@ -67,6 +71,7 @@ class AuthController(
 	}
 	
 	@PostMapping("/resend-verification-email")
+	@IpRateLimit(requests = 10, duration = 1L, unit = TimeUnit.HOURS)
 	fun resendVerificationEmail(
 		@Valid @RequestBody body: ForgotPasswordRequest
 	) {
@@ -96,6 +101,7 @@ class AuthController(
 	}
 	
 	@PostMapping("/forgot-password")
+	@IpRateLimit(requests = 10, duration = 1L, unit = TimeUnit.HOURS)
 	fun forgotPassword(
 		@Valid
 		@RequestBody body: ForgotPasswordRequest
