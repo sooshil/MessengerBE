@@ -1,6 +1,6 @@
 package com.sukajee.chirpbe.infra.database.entities
 
-import com.sukajee.chirpbe.domain.model.UserId
+import com.sukajee.chirpbe.domain.type.UserId
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue

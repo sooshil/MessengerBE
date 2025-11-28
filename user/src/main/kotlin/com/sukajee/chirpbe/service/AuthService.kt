@@ -8,7 +8,7 @@ import com.sukajee.chirpbe.domain.exception.UserAlreadyExistsException
 import com.sukajee.chirpbe.domain.exception.UserNotFoundException
 import com.sukajee.chirpbe.domain.model.AuthenticatedUser
 import com.sukajee.chirpbe.domain.model.User
-import com.sukajee.chirpbe.domain.model.UserId
+import com.sukajee.chirpbe.domain.type.UserId
 import com.sukajee.chirpbe.infra.database.entities.RefreshTokenEntity
 import com.sukajee.chirpbe.infra.database.entities.UserEntity
 import com.sukajee.chirpbe.infra.database.mappers.toUser

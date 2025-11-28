@@ -1,6 +1,6 @@
 package com.sukajee.chirpbe.infra.database.repositories
 
-import com.sukajee.chirpbe.domain.model.UserId
+import com.sukajee.chirpbe.domain.type.UserId
 import com.sukajee.chirpbe.infra.database.entities.RefreshTokenEntity
 import org.springframework.data.jpa.repository.JpaRepository
 

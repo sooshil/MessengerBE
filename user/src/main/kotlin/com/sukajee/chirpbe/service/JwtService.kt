@@ -1,7 +1,7 @@
 package com.sukajee.chirpbe.service
 
 import com.sukajee.chirpbe.domain.exception.InvalidTokenException
-import com.sukajee.chirpbe.domain.model.UserId
+import com.sukajee.chirpbe.domain.type.UserId
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys

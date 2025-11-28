@@ -1,6 +1,6 @@
 package com.sukajee.chirpbe.api.dto
 
-import com.sukajee.chirpbe.domain.model.UserId
+import com.sukajee.chirpbe.domain.type.UserId
 
 data class UserDto(
 	val id: UserId,

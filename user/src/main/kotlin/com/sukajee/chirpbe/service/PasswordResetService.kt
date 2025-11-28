@@ -1,11 +1,7 @@
 package com.sukajee.chirpbe.service
 
-import com.sukajee.chirpbe.domain.exception.IncorrectOldPasswordException
-import com.sukajee.chirpbe.domain.exception.InvalidTokenException
-import com.sukajee.chirpbe.domain.exception.PasswordEncodeException
-import com.sukajee.chirpbe.domain.exception.SamePasswordException
-import com.sukajee.chirpbe.domain.exception.UserNotFoundException
-import com.sukajee.chirpbe.domain.model.UserId
+import com.sukajee.chirpbe.domain.exception.*
+import com.sukajee.chirpbe.domain.type.UserId
 import com.sukajee.chirpbe.infra.database.entities.PasswordResetTokenEntity
 import com.sukajee.chirpbe.infra.database.repositories.PasswordResetTokenRepository
 import com.sukajee.chirpbe.infra.database.repositories.RefreshTokenRepository
