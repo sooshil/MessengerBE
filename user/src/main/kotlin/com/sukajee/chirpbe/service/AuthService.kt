@@ -1,11 +1,7 @@
 package com.sukajee.chirpbe.service
 
-import com.sukajee.chirpbe.domain.exception.EmailNotVerifiedException
-import com.sukajee.chirpbe.domain.exception.InvalidCredentialsException
-import com.sukajee.chirpbe.domain.exception.InvalidTokenException
-import com.sukajee.chirpbe.domain.exception.PasswordEncodeException
-import com.sukajee.chirpbe.domain.exception.UserAlreadyExistsException
-import com.sukajee.chirpbe.domain.exception.UserNotFoundException
+import com.sukajee.chirpbe.domain.events.user.UserEvent
+import com.sukajee.chirpbe.domain.exception.*
 import com.sukajee.chirpbe.domain.model.AuthenticatedUser
 import com.sukajee.chirpbe.domain.model.User
 import com.sukajee.chirpbe.domain.type.UserId
@@ -14,13 +10,14 @@ import com.sukajee.chirpbe.infra.database.entities.UserEntity
 import com.sukajee.chirpbe.infra.database.mappers.toUser
 import com.sukajee.chirpbe.infra.database.repositories.RefreshTokenRepository
 import com.sukajee.chirpbe.infra.database.repositories.UserRepository
+import com.sukajee.chirpbe.infra.message_queue.EventPublisher
 import com.sukajee.chirpbe.infra.security.PasswordEncoder
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.security.MessageDigest
 import java.time.Instant
-import java.util.Base64
+import java.util.*
 
 /**
  * Service class for handling authentication-related operations such as user registration,
@@ -38,7 +35,8 @@ class AuthService(
 	private val refreshTokenRepository: RefreshTokenRepository,
 	private val passwordEncoder: PasswordEncoder,
 	private val jwtService: JwtService,
-	private val emailVerificationService: EmailVerificationService
+	private val emailVerificationService: EmailVerificationService,
+	private val eventPublisher: EventPublisher
 ) {
 	/**
 	 * Registers a new user in the system.
@@ -56,29 +54,39 @@ class AuthService(
 	 */
 	@Transactional
 	fun register(username: String, email: String, password: String): User {
+		val trimmedEmail = email.trim()
+		val trimmedUserName = username.trim()
 		// Check if a user with the provided email or username already exists to prevent duplicates.
 		val user = userRepository.findByEmailOrUsername(
-			email = email.trim(),
-			username = username.trim()
+			email = trimmedEmail,
+			username = trimmedUserName
 		)
 		if (user != null) throw UserAlreadyExistsException()
 
 		// Encode the plain-text password into a secure hash before storing it.
 		val hashedPassword = passwordEncoder.encode(password) ?: throw PasswordEncodeException()
 
-		// Create and save the new user entity to the database.
+		// Create and convert it to domain model and save the new user entity to the database.
 		val savedUser = userRepository.saveAndFlush(
 			UserEntity(
-				username = username.trim(),
-				email = email.trim(),
+				username = trimmedUserName,
+				email = trimmedEmail,
 				hashedPassword = hashedPassword,
+			)
+		).toUser()
+		
+		// Send email
+		val token = emailVerificationService.createEmailVerificationToken(trimmedEmail)
+		eventPublisher.publish(
+			event = UserEvent.Created(
+				userId = savedUser.id,
+				email = savedUser.email,
+				username = savedUser.username,
+				verificationToken = token.token
 			)
 		)
 		
-		emailVerificationService.createEmailVerificationToken(email.trim())
-		
-		// Convert the saved entity to a domain model and return it.
-		return savedUser.toUser()
+		return savedUser
 	}
 
 	/**
